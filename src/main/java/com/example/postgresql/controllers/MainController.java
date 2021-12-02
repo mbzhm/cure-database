@@ -4,15 +4,12 @@ import com.example.postgresql.models.Form;
 import com.example.postgresql.models.User;
 import com.example.postgresql.services.UserAdvancedService;
 import com.example.postgresql.services.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
