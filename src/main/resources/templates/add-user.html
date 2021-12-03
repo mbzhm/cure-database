@@ -12,6 +12,7 @@
     <h3>Users database</h3>
     <p></p>
     <form action="#" th:action="@{/adduser}" th:object="${user}" method="post">
+        <p>Please fill in all the fields, especially email!</p>
         <label for="email">Email</label>
         <input type="text" th:field="*{email}" id="email" placeholder="Email">
         <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>

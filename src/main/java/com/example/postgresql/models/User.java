@@ -2,23 +2,31 @@ package com.example.postgresql.models;
 
 import com.sun.istack.NotNull;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="Users")
 public class User {
     @Id
     @NotNull
+    @NotEmpty(message = "User's email cannot be empty.")
     @Column(name="email")
     private String email;
 
     @NotNull
+    @NotEmpty(message = "User's name cannot be empty.")
+    @Size(max = 50)
     @Column(name="name")
     private String name;
 
     @NotNull
+    @NotEmpty(message = "User's surname cannot be empty.")
     @Column(name="surname")
     private String surname;
 
+    @Min(value = 0)
     @Column(name="salary")
     private int salary;
 
