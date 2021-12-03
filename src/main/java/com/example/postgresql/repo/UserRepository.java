@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, String> {
     @Query(value="select * from users u where u.name like %:keyword% or u.surname like %:keyword% " +
@@ -15,4 +16,5 @@ public interface UserRepository extends CrudRepository<User, String> {
     @Query(value="select * from users u", nativeQuery = true)
     public List<User> getAllUsers();
 
+    public User findByEmail(@Param("email") String email);
 }

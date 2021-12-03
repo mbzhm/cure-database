@@ -6,7 +6,10 @@ import com.example.postgresql.services.UserAdvancedService;
 import com.example.postgresql.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
@@ -86,5 +89,53 @@ public class MainController {
         model.addAttribute("users", users);
         model.addAttribute("form", new Form(keyword));
         return "users";
+    }
+
+    @PostMapping("/users-add")
+    public String addUser(User user, Model model) {
+        model.addAttribute("title", "Add user");
+        return "add-user";
+    }
+
+    @PostMapping("/adduser")
+    public String addUser(User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "add-user";
+        }
+
+        userService.save(user);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/edit/{email}")
+    public String showUpdateForm(@PathVariable("email") String email, Model model) {
+        User user = userService.findUser(email);
+
+        model.addAttribute("user", user);
+        return "update-user";
+    }
+
+    @PostMapping("/update/{email}")
+    public String updateUser(@PathVariable("email") String email, User user,
+                             BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            user.setEmail(email);
+            return "users";
+        }
+
+        userService.save(user);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/delete/{email}")
+    public String deleteUser(@PathVariable("email") String email, Model model) {
+        User user = userService.findUser(email);
+        userService.delete(user);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/form")
+    public String showForm(User user) {
+        return "add-user";
     }
 }

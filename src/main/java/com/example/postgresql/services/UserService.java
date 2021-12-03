@@ -20,4 +20,15 @@ public class UserService {
     public List<User> findByKeyword(String keyword){
         return userRepository.findByKeyword(keyword);
     }
+    public User findUser(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
 }
