@@ -19,19 +19,30 @@
         <h5>Select salary</h5>
         <select name="comparisonOperation" id="comparisonOperation" th:field="*{comparisonOperation}"
                 th:value="${form.comparisonOperation}">
-            <option th:value="equal">equal</option>
             <option th:value="more">more than</option>
             <option th:value="less">less than</option>
+            <option th:value="equal">equal</option>
             <option th:value="notLess">not less than</option>
             <option th:value="noMore">no more than</option>
         </select>
         <input type="text" placeholder="Enter salary" name="salary" th:field="*{salary}" th:value="${form.salary}">
+        <span>And</span>
+        <select name="comparisonOperation2" id="comparisonOperation2" th:field="*{comparisonOperation2}"
+                th:value="${form.comparisonOperation2}">
+            <option th:value="less">less than</option>
+            <option th:value="more">more than</option>
+            <option th:value="equal">equal</option>
+            <option th:value="noMore">no more than</option>
+            <option th:value="notLess">not less than</option>
+        </select>
+        <input type="text" placeholder="Enter salary" name="salary2" th:field="*{salary2}" th:value="${form.salary2}">
+        <p>You can leave the second input blank.</p>
         <p></p>
         <h5>Select country</h5>
         <select name="country" id="country" th:field="*{country}" th:value="${form.country}">
             <option th:value="None">None</option>
             <option th:each="country : ${T(com.example.postgresql.models.Country).values()}"
-                    th:value="${country}"
+                    th:value="${country}",
                     th:text="${country}"/>
         </select>
         <p></p>

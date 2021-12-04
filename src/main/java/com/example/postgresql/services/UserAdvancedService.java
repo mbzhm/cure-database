@@ -13,7 +13,7 @@ public class UserAdvancedService {
     public void filterByCountry(List<User> users, List<User> filteringUsers, String country){
 
         for(User user : filteringUsers){
-            if(user.getCountry().equals(country)){
+            if(country.equals(user.getCountry())){
                 users.add(user);
             }
         }

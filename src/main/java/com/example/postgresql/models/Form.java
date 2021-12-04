@@ -1,8 +1,12 @@
 package com.example.postgresql.models;
 
+import java.util.List;
+
 public class Form {
     public String keyword;
     public String comparisonOperation;
+    public String comparisonOperation2;
+    public Integer salary2;
     public Integer salary;
     public String country;
     public String sortBy;
@@ -56,11 +60,29 @@ public class Form {
         this.sortDirection = sortDirection;
     }
 
-    public Form(String keyword, String comparisonOperation, Integer salary, String country, String sortBy,
-                String sortDirection) {
+    public String getComparisonOperation2() {
+        return comparisonOperation2;
+    }
+
+    public void setComparisonOperation2(String comparisonOperation2) {
+        this.comparisonOperation2 = comparisonOperation2;
+    }
+
+    public Integer getSalary2() {
+        return salary2;
+    }
+
+    public void setSalary2(Integer salary2) {
+        this.salary2 = salary2;
+    }
+
+    public Form(String keyword, String comparisonOperation, Integer salary, String comparisonOperation2,
+                Integer salary2, String country, String sortBy, String sortDirection) {
         this.keyword = keyword;
         this.comparisonOperation = comparisonOperation;
         this.salary = salary;
+        this.comparisonOperation2 = comparisonOperation2;
+        this.salary2 = salary2;
         this.country = country;
         this.sortBy = sortBy;
         this.sortDirection = sortDirection;

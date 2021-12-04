@@ -7,10 +7,7 @@ import com.example.postgresql.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -39,6 +36,8 @@ public class MainController {
                                       String country,
                                       String comparisonOperation,
                                       Integer salary,
+                                      String comparisonOperation2,
+                                      Integer salary2,
                                       @RequestParam(defaultValue = "name") String sortBy,
                                       @RequestParam(defaultValue = "asc") String sortDirection,
                                       Model model){
@@ -65,14 +64,26 @@ public class MainController {
 
         if(salary != null) {
             filteredBySalaryUsers = new ArrayList<>();
-            userAdvancedService.filterBySalary(filteredBySalaryUsers, users, comparisonOperation, salary);
+            userAdvancedService.filterBySalary(filteredBySalaryUsers, filteredByCountryUsers,
+                    comparisonOperation, salary);
         }else{
             filteredBySalaryUsers = filteredByCountryUsers;
         }
 
-        userAdvancedService.sortingBy(filteredBySalaryUsers, sortBy, sortDirection);
-        model.addAttribute("users", filteredBySalaryUsers);
-        model.addAttribute("form", new Form(keyword, comparisonOperation, salary, country, sortBy, sortDirection));
+        List<User> filteredBySalary2Users;
+
+        if(salary2 != null) {
+            filteredBySalary2Users = new ArrayList<>();
+            userAdvancedService.filterBySalary(filteredBySalary2Users, filteredBySalaryUsers,
+                    comparisonOperation2, salary2);
+        }else{
+            filteredBySalary2Users = filteredBySalaryUsers;
+        }
+
+        userAdvancedService.sortingBy(filteredBySalary2Users, sortBy, sortDirection);
+        model.addAttribute("users", filteredBySalary2Users);
+        model.addAttribute("form", new Form(keyword, comparisonOperation, salary,
+                comparisonOperation2, salary2, country, sortBy, sortDirection));
         return "users-advanced-search";
     }
 
