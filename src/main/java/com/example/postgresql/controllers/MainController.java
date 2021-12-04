@@ -36,6 +36,7 @@ public class MainController {
                                       String country,
                                       String comparisonOperation,
                                       Integer salary,
+                                      @RequestParam(defaultValue = "inter") String joinOperation,
                                       String comparisonOperation2,
                                       Integer salary2,
                                       @RequestParam(defaultValue = "name") String sortBy,
@@ -73,16 +74,22 @@ public class MainController {
         List<User> filteredBySalary2Users;
 
         if(salary2 != null) {
-            filteredBySalary2Users = new ArrayList<>();
+            if (joinOperation.equals("inter")){
+                filteredBySalary2Users = new ArrayList<>();
             userAdvancedService.filterBySalary(filteredBySalary2Users, filteredBySalaryUsers,
                     comparisonOperation2, salary2);
+            }else{
+                userAdvancedService.filterBySalary(filteredBySalaryUsers, filteredByCountryUsers,
+                        comparisonOperation2, salary2);
+                filteredBySalary2Users = filteredBySalaryUsers;
+            }
         }else{
             filteredBySalary2Users = filteredBySalaryUsers;
         }
 
         userAdvancedService.sortingBy(filteredBySalary2Users, sortBy, sortDirection);
         model.addAttribute("users", filteredBySalary2Users);
-        model.addAttribute("form", new Form(keyword, comparisonOperation, salary,
+        model.addAttribute("form", new Form(keyword, comparisonOperation, salary, joinOperation,
                 comparisonOperation2, salary2, country, sortBy, sortDirection));
         return "users-advanced-search";
     }

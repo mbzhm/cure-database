@@ -26,7 +26,14 @@
             <option th:value="noMore">no more than</option>
         </select>
         <input type="text" placeholder="Enter salary" name="salary" th:field="*{salary}" th:value="${form.salary}">
-        <span>And</span>
+        <span>
+            <select name="joinOperation" id="joinOperation" th:field="*{joinOperation}"
+                    th:value="${form.joinOperation}">
+                <option th:value="inter">AND</option>
+                <option th:value="union">OR</option>
+            </select>
+        </span>
+        <p></p>
         <select name="comparisonOperation2" id="comparisonOperation2" th:field="*{comparisonOperation2}"
                 th:value="${form.comparisonOperation2}">
             <option th:value="less">less than</option>

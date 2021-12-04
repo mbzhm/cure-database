@@ -8,6 +8,7 @@ public class Form {
     public String comparisonOperation2;
     public Integer salary2;
     public Integer salary;
+    public String joinOperation;
     public String country;
     public String sortBy;
     public String sortDirection;
@@ -72,16 +73,25 @@ public class Form {
         return salary2;
     }
 
+    public String getJoinOperation() {
+        return joinOperation;
+    }
+
+    public void setJoinOperation(String joinOperation) {
+        this.joinOperation = joinOperation;
+    }
+
     public void setSalary2(Integer salary2) {
         this.salary2 = salary2;
     }
 
-    public Form(String keyword, String comparisonOperation, Integer salary, String comparisonOperation2,
-                Integer salary2, String country, String sortBy, String sortDirection) {
+    public Form(String keyword, String comparisonOperation, Integer salary, String joinOperation,
+                String comparisonOperation2, Integer salary2, String country, String sortBy, String sortDirection) {
         this.keyword = keyword;
         this.comparisonOperation = comparisonOperation;
         this.salary = salary;
         this.comparisonOperation2 = comparisonOperation2;
+        this.joinOperation = joinOperation;
         this.salary2 = salary2;
         this.country = country;
         this.sortBy = sortBy;
