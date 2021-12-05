@@ -1,9 +1,12 @@
 package com.example.postgresql.controllers;
 
 import com.example.postgresql.models.Form;
+import com.example.postgresql.models.RecordForm;
 import com.example.postgresql.models.User;
+import com.example.postgresql.models.Records;
 import com.example.postgresql.services.UserAdvancedService;
 import com.example.postgresql.services.UserService;
+import com.example.postgresql.services.RecordService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,11 +21,14 @@ public class MainController {
 
     private final UserService userService;
     private final UserAdvancedService userAdvancedService;
+    private final RecordService recordService;
 
-    public MainController(UserService userService, UserAdvancedService userAdvancedService) {
+
+    public MainController(UserService userService, UserAdvancedService userAdvancedService, RecordService recordService) {
 
         this.userService = userService;
         this.userAdvancedService = userAdvancedService;
+        this.recordService = recordService;
     }
 
     @GetMapping("/")
@@ -94,6 +100,99 @@ public class MainController {
         return "users-advanced-search";
     }
 
+    @GetMapping("/records-advanced-search")
+    public String recordsAdvancedSearch(String email,
+                                      String country,
+                                      String comparisonOperationD,
+                                      Integer total_deaths,
+                                      @RequestParam(defaultValue = "inter") String joinOperationD,
+                                      String comparisonOperationD2,
+                                      Integer total_deaths2,
+                                      String comparisonOperationP,
+                                      Integer total_patients,
+                                      @RequestParam(defaultValue = "inter") String joinOperationP,
+                                      String comparisonOperationP2,
+                                      Integer total_patients2,
+                                      @RequestParam(defaultValue = "email") String sortBy,
+                                      @RequestParam(defaultValue = "asc") String sortDirection,
+                                      Model model){
+        model.addAttribute("title", "Advanced Search (records)");
+
+        List<Records> records;
+
+        if(email != null) {
+            records = recordService.findByKeyword(email);
+        }else{
+            records = recordService.getAllRecords();
+        }
+
+        List<Records> filteredByCountryRecords;
+
+        if(country != null && !country.equals("None")) {
+            filteredByCountryRecords = new ArrayList<>();
+            recordService.filterByCountry(filteredByCountryRecords, records, country);
+        }else{
+            filteredByCountryRecords = records;
+        }
+
+        List<Records> filteredByDRecords;
+
+        if(total_deaths != null) {
+            filteredByDRecords = new ArrayList<>();
+            recordService.filterByD(filteredByDRecords, filteredByCountryRecords,
+                    comparisonOperationD, total_deaths);
+        }else{
+            filteredByDRecords = filteredByCountryRecords;
+        }
+
+        List<Records> filteredByD2Records;
+
+        if(total_deaths2 != null) {
+            if (joinOperationD.equals("inter")){
+                filteredByD2Records = new ArrayList<>();
+                recordService.filterByD(filteredByD2Records, filteredByDRecords,
+                        comparisonOperationD2, total_deaths2);
+            }else{
+                recordService.filterByD(filteredByDRecords, filteredByCountryRecords,
+                        comparisonOperationD2, total_deaths2);
+                filteredByD2Records = filteredByDRecords;
+            }
+        }else{
+            filteredByD2Records = filteredByDRecords;
+        }
+
+        List<Records> filteredByPRecords;
+
+        if(total_patients != null) {
+            filteredByPRecords = new ArrayList<>();
+            recordService.filterByP(filteredByPRecords, filteredByD2Records,
+                    comparisonOperationP, total_patients);
+        }else{
+            filteredByPRecords = filteredByD2Records;
+        }
+
+        List<Records> filteredByP2Records;
+
+        if(total_patients2 != null) {
+            if (joinOperationD.equals("inter")){
+                filteredByP2Records = new ArrayList<>();
+                recordService.filterByP(filteredByP2Records, filteredByPRecords,
+                        comparisonOperationP2, total_patients2);
+            }else{
+                recordService.filterByP(filteredByPRecords, filteredByD2Records,
+                        comparisonOperationP2, total_patients2);
+                filteredByP2Records = filteredByPRecords;
+            }
+        }else{
+            filteredByP2Records = filteredByD2Records;
+        }
+
+        recordService.sortingBy(filteredByP2Records, sortBy, sortDirection);
+        model.addAttribute("records", filteredByP2Records);
+        model.addAttribute("recordForm", new RecordForm(email, comparisonOperationD, comparisonOperationD2, total_deaths, total_deaths2, joinOperationD, comparisonOperationP, comparisonOperationP2, total_patients, total_patients2, joinOperationP, country, sortBy,sortDirection));
+        return "records-advanced-search";
+    }
+
     @GetMapping("/users")
     public String users(String keyword, Model model){
         model.addAttribute("title", "Users page");
@@ -108,6 +207,22 @@ public class MainController {
         model.addAttribute("users", users);
         model.addAttribute("form", new Form(keyword));
         return "users";
+    }
+
+    @GetMapping("/records")
+    public String records(String keyword, Model model){
+        model.addAttribute("title", "Records page");
+
+        Iterable<Records> records;
+        if(keyword != null) {
+            records = recordService.findByKeyword(keyword);
+        }else{
+            records = recordService.getAllRecords();
+        }
+
+        model.addAttribute("records", records);
+        model.addAttribute("recordForm", new RecordForm(keyword));
+        return "records";
     }
 
     @PostMapping("/users-add")
