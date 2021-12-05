@@ -13,11 +13,14 @@
     <p></p>
     <form action="#" th:action="@{/addrecord}" th:object="${records}" method="post">
         <p>Please fill in all the fields, especially email, country, and disease code!</p>
+        <p></p>
+        <label for="country">Email</label>
         <select name="email" id="email" th:field="*{email}">
             <option th:each="user : ${users}"
                     th:value="${user.email}"
                     th:text="${user.email}"/>
         </select>
+        <p></p>
         <label for="country">Country</label>
         <select name="country" id="country" th:field="*{country}">
             <option th:each="country : ${T(com.example.postgresql.models.Country).values()}"
