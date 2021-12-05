@@ -23,12 +23,8 @@ public class RecordService {
         return recordsRepository.findByKeyword(keyword);
     }
 
-    public Records findRecords(String email, String country, String diseaseCode) {
+    public Records findRecordBy(String email, String country, String diseaseCode) {
         return recordsRepository.findByEmailCAndCountryAndDiseaseCode(email, country, diseaseCode);
-    }
-
-    public void save(Records records) {
-        recordsRepository.save(records);
     }
 
     public void delete(Records records) {
@@ -118,6 +114,22 @@ public class RecordService {
                 }
                 break;
 
+        }
+    }
+
+    public Records findRecord(String email, String country, String disease) {
+        return recordsRepository.findByEmailCAndCountryAndDiseaseCode(email, country, disease);
+    }
+
+    public void save(Records record) {
+        recordsRepository.save(record);
+    }
+
+    public void filterByCode(List<Records> filteredByDiseaseCodeRecords, List<Records> records, String diseaseCode) {
+        for (Records record : records) {
+            if (diseaseCode.equals(record.getDiseaseCode())) {
+                filteredByDiseaseCodeRecords.add(record);
+            }
         }
     }
 

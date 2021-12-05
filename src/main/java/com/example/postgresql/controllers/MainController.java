@@ -1,9 +1,6 @@
 package com.example.postgresql.controllers;
 
-import com.example.postgresql.models.Form;
-import com.example.postgresql.models.RecordForm;
-import com.example.postgresql.models.User;
-import com.example.postgresql.models.Records;
+import com.example.postgresql.models.*;
 import com.example.postgresql.services.UserAdvancedService;
 import com.example.postgresql.services.UserService;
 import com.example.postgresql.services.RecordService;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -102,6 +100,7 @@ public class MainController {
 
     @GetMapping("/records-advanced-search")
     public String recordsAdvancedSearch(String email,
+                                      String diseaseCode,
                                       String country,
                                       String comparisonOperationD,
                                       Integer total_deaths,
@@ -126,13 +125,21 @@ public class MainController {
             records = recordService.getAllRecords();
         }
 
+        List<Records> filteredByDiseaseCodeRecords;
+        if(diseaseCode != null && !diseaseCode.equals("None")) {
+            filteredByDiseaseCodeRecords = new ArrayList<>();
+            recordService.filterByCode(filteredByDiseaseCodeRecords, records, diseaseCode);
+        }else{
+            filteredByDiseaseCodeRecords = records;
+        }
+
         List<Records> filteredByCountryRecords;
 
         if(country != null && !country.equals("None")) {
             filteredByCountryRecords = new ArrayList<>();
-            recordService.filterByCountry(filteredByCountryRecords, records, country);
+            recordService.filterByCountry(filteredByCountryRecords, filteredByDiseaseCodeRecords, country);
         }else{
-            filteredByCountryRecords = records;
+            filteredByCountryRecords = filteredByDiseaseCodeRecords;
         }
 
         List<Records> filteredByDRecords;
@@ -188,8 +195,9 @@ public class MainController {
         }
 
         recordService.sortingBy(filteredByP2Records, sortBy, sortDirection);
+        model.addAttribute("diseaseCodes", diseaseCodes);
         model.addAttribute("records", filteredByP2Records);
-        model.addAttribute("recordForm", new RecordForm(email, comparisonOperationD, comparisonOperationD2, total_deaths, total_deaths2, joinOperationD, comparisonOperationP, comparisonOperationP2, total_patients, total_patients2, joinOperationP, country, sortBy,sortDirection));
+        model.addAttribute("recordForm", new RecordForm(email, diseaseCode, comparisonOperationD, comparisonOperationD2, total_deaths, total_deaths2, joinOperationD, comparisonOperationP, comparisonOperationP2, total_patients, total_patients2, joinOperationP, country, sortBy,sortDirection));
         return "records-advanced-search";
     }
 
@@ -231,6 +239,14 @@ public class MainController {
         return "add-user";
     }
 
+    @PostMapping("/records-add")
+    public String addRecords(@Valid Records record, Model model) {
+
+        model.addAttribute("diseaseCodes", diseaseCodes);
+        model.addAttribute("title", "Add record");
+        return "add-record";
+    }
+
     @PostMapping("/adduser")
     public String addUser(@Valid User user, BindingResult result, Model model) {
 
@@ -242,12 +258,40 @@ public class MainController {
         return "redirect:/users";
     }
 
+    @PostMapping("/addrecord")
+    public String addRecord(@Valid Records record, BindingResult result, Model model) {
+
+        if (result.hasErrors()) {
+            return "add-record";
+        }
+
+        model.addAttribute("records", record);
+
+        recordService.save(record);
+        return "redirect:/records";
+    }
+
     @GetMapping("/edit/{email}")
     public String showUpdateForm(@PathVariable("email") String email, Model model) {
         User user = userService.findUser(email);
 
         model.addAttribute("user", user);
         return "update-user";
+    }
+
+    @GetMapping("/editRecord/{email}/{country}/{diseaseCode}")
+    public String showUpdateForm(@PathVariable("email") String email,
+                                 @PathVariable("country") String country,
+                                 @PathVariable("diseaseCode") String diseaseCode, Model model) {
+        Records record = recordService.findRecordBy(email, country, diseaseCode);
+
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+
+        model.addAttribute("diseaseCodes", diseaseCodes);
+
+        model.addAttribute("records", record);
+        return "update-record";
     }
 
     @PostMapping("/update/{email}")
@@ -263,6 +307,19 @@ public class MainController {
         return "redirect:/users";
     }
 
+    @PostMapping("/updateRecord/{email}/{country}/{diseaseCode}")
+    public String updateUser(@PathVariable("email") String email,
+                             @PathVariable("country") String country,
+                             @PathVariable("diseaseCode") String diseaseCode,
+                             @Valid Records record,
+                             BindingResult result, Model model) {
+
+        model.addAttribute("diseaseCodes", diseaseCodes);
+
+        recordService.save(record);
+        return "redirect:/records";
+    }
+
     @GetMapping("/delete/{email}")
     public String deleteUser(@PathVariable("email") String email, Model model) {
         User user = userService.findUser(email);
@@ -270,8 +327,33 @@ public class MainController {
         return "redirect:/users";
     }
 
+    @GetMapping("/deleteRecord/{email}/{country}/{diseaseCode}")
+    public String deleteRecord(@PathVariable("email") String email,
+                               @PathVariable("country") String country,
+                               @PathVariable("diseaseCode")String diseaseCode, Model model) {
+        Records record = recordService.findRecordBy(email, country, diseaseCode);
+        recordService.delete(record);
+        return "redirect:/records";
+    }
+
     @GetMapping("/form")
     public String showForm(@Valid User user) {
         return "add-user";
     }
+
+    @GetMapping("/recordForm")
+    public String showForm(@Valid Records record, Model model) {
+
+        model.addAttribute("records", record);
+
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+
+        model.addAttribute("diseaseCodes", diseaseCodes);
+        return "add-record";
+    }
+
+    public static List<String> diseaseCodes = new ArrayList<String>(
+            Arrays.asList("A15.7", "U07.1", "A00.9", "C80.1", "G30.9", "F32.0", "487,0",
+            "B20.0", "B44.9", "J18.9"));
 }

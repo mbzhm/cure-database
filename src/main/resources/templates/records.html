@@ -17,6 +17,7 @@
         <button type="submit">Search</button>
         <a href="/records-advanced-search">Advanced search</a>
     </form>
+    <p></p>
     <p><a href="/recordForm">Add a new record</a></p>
     </form>
     <p></p>
@@ -26,7 +27,6 @@
             <th scope="col">Email</th>
             <th scope="col">Country</th>
             <th scope="col">Disease code</th>
-            <th scope="col">Disease description</th>
             <th scope="col">Total deaths</th>
             <th scope="col">Total patients</th>
             <th scope="col"></th>
@@ -37,12 +37,11 @@
         <tr th:each="record : ${records}">
             <td><span th:text="${record.email}"/></td>
             <td><span th:text="${record.country}"/></td>
-            <td><span th:text="${record.disease.diseaseCode}"/></td>
-            <td><span th:text="${record.disease.description}"/></td>
+            <td><span th:text="${record.diseaseCode}"/></td>
             <td><span th:text="${record.total_deaths}"/></td>
             <td><span th:text="${record.total_patients}"/></td>
-            <td><a th:href="@{/editRecord/{email}(email=${record.email})}">Edit</a></td>
-            <td><a th:href="@{/deleteRecord/{email}(email=${record.email})}">Delete</a></td>
+            <td><a th:href="@{/editRecord/{email}/{country}/{diseaseCode}/(email=${record.email}, country=${record.country}, diseaseCode=${record.diseaseCode})}">Edit</a></td>
+            <td><a th:href="@{/deleteRecord/{email}/{country}/{diseaseCode}/(email=${record.email}, country=${record.country}, diseaseCode=${record.diseaseCode})}">Delete</a></td>
         </tr>
         </tbody>
     </table>

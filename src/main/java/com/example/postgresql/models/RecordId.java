@@ -1,20 +1,18 @@
 package com.example.postgresql.models;
 
-import com.example.postgresql.models.disease.Disease;
-
 import java.io.Serializable;
 
 public class RecordId implements Serializable {
     private String email;
     private String country;
-    private Disease disease;
+    private String diseaseCode;
 
     public RecordId() {
     }
 
-    public RecordId(String email, String country, Disease disease) {
+    public RecordId(String email, String country, String diseaseCode) {
         this.email = email;
         this.country = country;
-        this.disease = disease;
+        this.diseaseCode = diseaseCode;
     }
 }

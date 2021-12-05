@@ -2,6 +2,7 @@ package com.example.postgresql.models;
 
 public class RecordForm {
     public String keyword;
+    public String diseaseCode;
     public String comparisonOperationD;
     public String comparisonOperationD2;
     public Integer total_deaths;
@@ -16,8 +17,9 @@ public class RecordForm {
     public String sortBy;
     public String sortDirection;
 
-    public RecordForm(String keyword, String comparisonOperationD, String comparisonOperationD2, Integer total_deaths, Integer total_deaths2, String joinOperationD, String comparisonOperationP, String comparisonOperationP2, Integer total_patients, Integer total_patients2, String joinOperationP, String country, String sortBy, String sortDirection) {
+    public RecordForm(String keyword, String diseaseCode, String comparisonOperationD, String comparisonOperationD2, Integer total_deaths, Integer total_deaths2, String joinOperationD, String comparisonOperationP, String comparisonOperationP2, Integer total_patients, Integer total_patients2, String joinOperationP, String country, String sortBy, String sortDirection) {
         this.keyword = keyword;
+        this.diseaseCode = diseaseCode;
         this.comparisonOperationD = comparisonOperationD;
         this.comparisonOperationD2 = comparisonOperationD2;
         this.total_deaths = total_deaths;
@@ -147,5 +149,13 @@ public class RecordForm {
 
     public void setSortDirection(String sortDirection) {
         this.sortDirection = sortDirection;
+    }
+
+    public String getDiseaseCode() {
+        return diseaseCode;
+    }
+
+    public void setDiseaseCode(String diseaseCode) {
+        this.diseaseCode = diseaseCode;
     }
 }

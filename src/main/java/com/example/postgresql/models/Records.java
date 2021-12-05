@@ -1,6 +1,5 @@
 package com.example.postgresql.models;
 
-import com.example.postgresql.models.disease.Disease;
 import com.sun.istack.NotNull;
 import javax.persistence.*;
 
@@ -8,6 +7,7 @@ import javax.persistence.*;
 @Table(name="Record")
 @IdClass(RecordId.class)
 public class Records {
+
     @Id
     @NotNull
     @Column(name="email")
@@ -25,20 +25,19 @@ public class Records {
     private int total_patients;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name="disease_code")
-    private Disease disease;
+    @Column(name="disease_code")
+    private String diseaseCode;
 
     public Records() {
 
     }
 
-    public Disease getDisease() {
-        return disease;
+    public String getDiseaseCode() {
+        return diseaseCode;
     }
 
-    public void setDisease(Disease disease) {
-        this.disease = disease;
+    public void setDiseaseCode(String diseaseCode) {
+        this.diseaseCode = diseaseCode;
     }
 
     public String getEmail() {
@@ -73,11 +72,11 @@ public class Records {
         this.total_patients = total_patients;
     }
 
-    public Records(String email, String country, int total_deaths, int total_patients, Disease disease) {
+    public Records(String email, String country, int total_deaths, int total_patients, String diseaseCode) {
         this.email = email;
         this.country = country;
         this.total_deaths = total_deaths;
         this.total_patients = total_patients;
-        this.disease = disease;
+        this.diseaseCode = diseaseCode;
     }
 }
