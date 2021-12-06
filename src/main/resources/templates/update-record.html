@@ -13,10 +13,12 @@
     <p></p>
     <form action="#" th:action="@{/updateRecord/{email}/{country}/{diseaseCode}(email=${records.email}, country=${records.country}, diseaseCode=${records.diseaseCode})}"
           th:object="${records}" method="post">
-        <p>Please fill in all the fields, especially email, country, and disease!</p>
-        <label for="email">Email</label>
-        <input type="text" th:field="*{email}" id="email" placeholder="Email">
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        <label for="country">Email</label>
+        <select name="email" id="email" th:field="*{email}">
+            <option th:each="user : ${users}"
+                    th:value="${user.email}"
+                    th:text="${user.email}"/>
+        </select>
         <p></p>
         <label for="country">Country</label>
         <select name="country" id="country" th:field="*{country}">

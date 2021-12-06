@@ -303,6 +303,11 @@ public class MainController {
             return "users";
         }
 
+        if(user.getEmail() != email){
+            User old_user = userService.findUser(email);
+            userService.delete(old_user);
+        }
+
         userService.save(user);
         return "redirect:/users";
     }
@@ -315,6 +320,28 @@ public class MainController {
                              BindingResult result, Model model) {
 
         model.addAttribute("diseaseCodes", diseaseCodes);
+
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+
+        if (result.hasErrors()) {
+            record.setEmail(email);
+            return "records";
+        }
+        if (result.hasErrors()) {
+            record.setCountry(country);
+            return "records";
+        }
+        if (result.hasErrors()) {
+            record.setDiseaseCode(diseaseCode);
+            return "records";
+        }
+
+        if(record.getEmail() != email || record.getCountry() != country
+                || record.getDiseaseCode() != diseaseCode){
+            Records old_record = recordService.findRecord(email, country, diseaseCode);
+            recordService.delete(old_record);
+        }
 
         recordService.save(record);
         return "redirect:/records";
