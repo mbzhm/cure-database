@@ -95,15 +95,15 @@ public class RecordService {
                 break;
             case "total_patients":
                 if (sortDirection.equals("asc")) {
-                    recordss.sort(new RecordService.SortByD());
-                } else {
-                    recordss.sort(new RecordService.SortByDDesc());
-                }
-            case "total_deaths":
-                if (sortDirection.equals("asc")) {
                     recordss.sort(new RecordService.SortByP());
                 } else {
                     recordss.sort(new RecordService.SortByPDesc());
+                }
+            case "total_deaths":
+                if (sortDirection.equals("asc")) {
+                    recordss.sort(new RecordService.SortByD());
+                } else {
+                    recordss.sort(new RecordService.SortByDDesc());
                 }
                 break;
             case "country":
